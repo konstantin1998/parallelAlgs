@@ -13,13 +13,8 @@ public class Graph {
 
     public Collection<Vertex> getAdjacentVertices(Vertex v) {
 
-        Collection<Vertex> vertices = null;
+        Collection<Vertex> vertices = adjacencyList.get(v);;
 
-        for(Map.Entry<Vertex, Collection<Vertex>> entry: adjacencyList.entrySet()) {
-            if(entry.getKey().equals(v)){
-                vertices = entry.getValue();
-            }
-        }
         if(vertices == null) {
             return Collections.emptyList();
         }
