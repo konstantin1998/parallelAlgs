@@ -12,8 +12,7 @@ public class Graph {
     }
 
     public Collection<Vertex> getAdjacentVertices(Vertex v) {
-
-        Collection<Vertex> vertices = adjacencyList.get(v);;
+        Collection<Vertex> vertices = adjacencyList.get(v);
 
         if(vertices == null) {
             return Collections.emptyList();

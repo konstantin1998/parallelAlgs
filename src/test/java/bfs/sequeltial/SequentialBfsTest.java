@@ -32,6 +32,10 @@ public class SequentialBfsTest {
         anotherVertices.add(vertices.get(3));
         adjacencyList.put(vertices.get(2), anotherVertices);
 
+        List<Vertex> anotherVertices2 = new ArrayList<>();
+        anotherVertices2.add(vertices.get(0));
+        adjacencyList.put(vertices.get(3), anotherVertices2);
+
         Graph graph = new Graph(adjacencyList, vertices.get(0));
 
         //when
