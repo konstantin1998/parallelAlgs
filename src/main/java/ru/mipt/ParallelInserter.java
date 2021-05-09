@@ -13,6 +13,7 @@ public class ParallelInserter extends ForkJoin{
         this.left = 0;
         this.right = from.size() - 1;
         this.shift = shift;
+        this.block = 1_000_000;
     }
 
     @Override

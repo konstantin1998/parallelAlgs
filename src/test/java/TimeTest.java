@@ -6,17 +6,7 @@ import java.util.List;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class TimeTest {
-//    @Test
-//    public void test() {
-//        int size = 10;
-//        List<Integer> list1 = initialize(size);
-//        List<Integer> list2 = initialize(size);
-//
-//        assertEquals(list1, list2);
-//    }
 
     private List<Integer> initialize(int size) {
         int seed = 1;
@@ -32,33 +22,38 @@ public class TimeTest {
 
     @Test
     public void shouldWorkFasterThanSequentialAlgorithm(){
+        warmUpJvm();
+
         int size = 10_000_000;
         List<Integer> listToSort = initialize(size);
+
         ListSorter ls = new ListSorter();
-        ls.quickSort(listToSort, 0, listToSort.size() - 1);
 
-        listToSort = initialize(size);
-        QuickSort qs = new QuickSort();
-        qs.setList(listToSort);
-        qs.setRight(listToSort.size() - 1);
-        qs.setLeft(0);
-        qs.run();
-
-        listToSort = initialize(size);
         long sequentialAlgStart = System.currentTimeMillis();
         ls.quickSort(listToSort, 0, listToSort.size() - 1);
         long sequentialTime = System.currentTimeMillis() - sequentialAlgStart;
         System.out.println("sequential time: " + sequentialTime);
 
+
         listToSort = initialize(size);
-        qs.setList(listToSort);
-        qs.setRight(listToSort.size() - 1);
-        qs.setLeft(0);
+        QuickSort qs = new QuickSort(listToSort);
+
         long paralAlgStart = System.currentTimeMillis();
         qs.run();
         long parallelTime = System.currentTimeMillis() - paralAlgStart;
         System.out.println("parallel time: " + parallelTime);
 
         assertTrue(parallelTime < sequentialTime / 2);
+    }
+
+    private void warmUpJvm() {
+        int size = 1_000_000;
+        List<Integer> listToSort = initialize(size);
+        ListSorter ls = new ListSorter();
+        ls.quickSort(listToSort, 0, listToSort.size() - 1);
+
+        listToSort = initialize(size);
+        QuickSort qs = new QuickSort(listToSort);
+        qs.run();
     }
 }

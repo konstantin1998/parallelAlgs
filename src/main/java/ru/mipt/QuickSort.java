@@ -1,18 +1,23 @@
 package ru.mipt;
 
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Data
+@Setter
 public class QuickSort extends ForkJoin{
-    private int left;
-    private int right;
-    private int block = 100_000;
     private List<Integer> list;
     private ListSorter sorter = new ListSorter();
+
+    public QuickSort(List<Integer> list) {
+        super();
+        this.list = list;
+        this.left = 0;
+        this.right = list.size() - 1;
+    }
 
     public QuickSort() {
         super();
@@ -30,6 +35,9 @@ public class QuickSort extends ForkJoin{
 
         List<Integer> lessThanPivot = filter((Integer item) -> item < pivotElem);
         List<Integer> moreOrEqualThanPivot = filter((item) -> item >= pivotElem);
+
+
+
 
         Thread t1 = new Thread(() -> {
             insertIntoList(lessThanPivot, left);
@@ -63,9 +71,7 @@ public class QuickSort extends ForkJoin{
     }
 
     private void insertIntoList(List<Integer> items, int startPosition) {
-        if(startPosition + items.size() - 1 >= list.size()) {
-            throw new RuntimeException("index error: items.size = " + items.size() + ", start position = " + startPosition);
-        }
+
         for(int i = 0; i < items.size(); i++) {
             list.set(startPosition + i, items.get(i));
         }

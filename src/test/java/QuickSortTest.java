@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuickSortTest {
     @Test
     public void shouldSortInAscendingOrderWhenManyItems(){
-        int n = 10_000_000;
+        int n = 1_000_000;
         test(n);
     }
 
@@ -27,11 +27,8 @@ public class QuickSortTest {
             expected.add(i + 1);
         }
         //when
-        QuickSort qs = new QuickSort();
-        qs.setBlock(100_000);
-        qs.setList(actual);
-        qs.setRight(actual.size() - 1);
-        qs.setLeft(0);
+        QuickSort qs = new QuickSort(actual);
+        qs.setBlock(Math.max(100, n / 100));
         qs.run();
         //then
         assertEquals(expected, actual);
