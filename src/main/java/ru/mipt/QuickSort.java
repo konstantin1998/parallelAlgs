@@ -36,11 +36,11 @@ public class QuickSort extends ForkJoin{
         List<Integer> lessThanPivot = filter((Integer item) -> item < pivotElem);
         List<Integer> moreOrEqualThanPivot = filter((item) -> item >= pivotElem);
 
-
-
+        insertIntoList(lessThanPivot, left);
+        insertIntoList(moreOrEqualThanPivot, right - moreOrEqualThanPivot.size() + 1);
 
         Thread t1 = new Thread(() -> {
-            insertIntoList(lessThanPivot, left);
+
             QuickSort qs = new QuickSort();
             qs.setList(list);
             qs.setLeft(left);
@@ -48,7 +48,7 @@ public class QuickSort extends ForkJoin{
             qs.run();
         });
         Thread t2 = new Thread(() -> {
-            insertIntoList(moreOrEqualThanPivot, right - moreOrEqualThanPivot.size() + 1);
+
             QuickSort qs = new QuickSort();
             qs.setList(list);
             qs.setLeft(left + lessThanPivot.size());
@@ -58,12 +58,12 @@ public class QuickSort extends ForkJoin{
         t1.start();
         t2.start();
 
-        try {
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            t1.join();
+//            t2.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private List<Integer> filter(Predicate<Integer> predicate) {
@@ -71,9 +71,7 @@ public class QuickSort extends ForkJoin{
     }
 
     private void insertIntoList(List<Integer> items, int startPosition) {
-
-        for(int i = 0; i < items.size(); i++) {
-            list.set(startPosition + i, items.get(i));
-        }
+        ParallelInserter inserter = new ParallelInserter(items, list, startPosition);
+        inserter.run();
     }
 }
