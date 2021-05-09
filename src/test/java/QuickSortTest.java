@@ -1,9 +1,6 @@
 import org.junit.Test;
-import ru.mipt.ListSorter;
 import ru.mipt.QuickSort;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

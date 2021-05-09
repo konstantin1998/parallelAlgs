@@ -26,21 +26,18 @@ public class QuickSort {
         List<Integer> lessThanPivot = filter((Integer item) -> item < pivotElem);
         List<Integer> moreOrEqualThanPivot = filter((item) -> item >= pivotElem);
 
-
-
-        insertIntoList(lessThanPivot, 0);
-        insertIntoList(moreOrEqualThanPivot, lessThanPivot.size());
-
+        insertIntoList(lessThanPivot, left);
+        insertIntoList(moreOrEqualThanPivot, right - moreOrEqualThanPivot.size() + 1);
 
         QuickSort qs1 = new QuickSort();
         qs1.setList(list);
         qs1.setLeft(left);
-        qs1.setRight(lessThanPivot.size() - 1);
+        qs1.setRight(left + lessThanPivot.size() - 1);
         qs1.run();
 
         QuickSort qs2 = new QuickSort();
         qs2.setList(list);
-        qs2.setLeft(lessThanPivot.size());
+        qs2.setLeft(left + lessThanPivot.size());
         qs2.setRight(right);
         qs2.run();
 
@@ -69,7 +66,7 @@ public class QuickSort {
     }
 
     private List<Integer> filter(Predicate<Integer> predicate) {
-        return list.parallelStream().filter(predicate).collect(Collectors.toList());
+        return list.subList(left, right +1).parallelStream().filter(predicate).collect(Collectors.toList());
     }
 
     private void insertIntoList(List<Integer> items, int startPosition) {
