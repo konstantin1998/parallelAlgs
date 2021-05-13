@@ -1,11 +1,12 @@
 import org.junit.Test;
-import ru.mipt.QuickSort;
+import ru.mipt.parallel.ParallelSorter;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class QuickSortTest {
+public class ParallelSorterTest {
     @Test
     public void shouldSortInAscendingOrderWhenManyItems(){
         int n = 1_000_000;
@@ -27,9 +28,8 @@ public class QuickSortTest {
             expected.add(i + 1);
         }
         //when
-        QuickSort qs = new QuickSort(actual);
-        qs.setBlock(Math.max(100, n / 100));
-        qs.run();
+        ParallelSorter sorter = new ParallelSorter();
+        sorter.sort(actual);
         //then
         assertEquals(expected, actual);
     }

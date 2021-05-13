@@ -1,5 +1,5 @@
 import org.junit.Test;
-import ru.mipt.ListSorter;
+import ru.mipt.sequential.ListSorter;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,7 @@
 import org.junit.Test;
-import ru.mipt.ListSorter;
-import ru.mipt.QuickSort;
+import ru.mipt.sequential.ListSorter;
+import ru.mipt.parallel.ParallelSorter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,39 +22,27 @@ public class TimeTest {
     }
 
     @Test
-    public void shouldWorkFasterThanSequentialAlgorithm(){
-        warmUpJvm();
+    public void shouldGiveTheSameResultAsSequentialAlgorithm(){
 
         int size = 10_000_000;
-        List<Integer> listToSort = initialize(size);
+        List<Integer> listToSort1 = initialize(size);
 
         ListSorter ls = new ListSorter();
 
         long sequentialAlgStart = System.currentTimeMillis();
-        ls.quickSort(listToSort, 0, listToSort.size() - 1);
+        ls.quickSort(listToSort1, 0, listToSort1.size() - 1);
         long sequentialTime = System.currentTimeMillis() - sequentialAlgStart;
         System.out.println("sequential time: " + sequentialTime);
 
 
-        listToSort = initialize(size);
-        QuickSort qs = new QuickSort(listToSort);
-
+        List<Integer> listToSort2 = initialize(size);
+        ParallelSorter sorter = new ParallelSorter();
         long paralAlgStart = System.currentTimeMillis();
-        qs.run();
+        sorter.sort(listToSort2);
         long parallelTime = System.currentTimeMillis() - paralAlgStart;
         System.out.println("parallel time: " + parallelTime);
 
-        assertTrue(parallelTime < sequentialTime / 2);
+        assertEquals(listToSort1, listToSort2);
     }
 
-    private void warmUpJvm() {
-        int size = 1_000_000;
-        List<Integer> listToSort = initialize(size);
-        ListSorter ls = new ListSorter();
-        ls.quickSort(listToSort, 0, listToSort.size() - 1);
-
-        listToSort = initialize(size);
-        QuickSort qs = new QuickSort(listToSort);
-        qs.run();
-    }
 }

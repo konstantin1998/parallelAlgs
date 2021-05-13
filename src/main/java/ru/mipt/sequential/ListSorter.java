@@ -1,4 +1,4 @@
-package ru.mipt;
+package ru.mipt.sequential;
 
 import java.util.List;
 
