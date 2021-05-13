@@ -9,10 +9,11 @@ import java.util.concurrent.RecursiveTask;
 
 public class QuickSortMultiThreading extends RecursiveTask<Integer> {
 
-    int start, end;
-    List<Integer> list;
-    int block = 100_000;
-    ListSorter sorter = new ListSorter();
+    private final int start;
+    private final int end;
+    private final List<Integer> list;
+    private int block = 100_000;
+    private ListSorter sorter = new ListSorter();
 
     /**
      * Finding random pivoted and partition

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TimeTest {
+public class PerformanceTest {
 
     private List<Integer> initialize(int size) {
         int seed = 1;
@@ -44,5 +44,6 @@ public class TimeTest {
 
         assertEquals(listToSort1, listToSort2);
     }
+
 
 }
