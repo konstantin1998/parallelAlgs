@@ -37,13 +37,17 @@ public class ExternalTreeTest {
         Node n1 = new Node(-2147483648);
         Node n2 = new Node(2147483647);
         Node n3 = new Node(2147483647);
-        Node n4 = new Node(12);
-        Node n5 = new Node(12);
-        Node n6 = new Node(8);
+        Node n4 = new Node(8);
+        Node n5 = new Node(6);
+        Node n6 = new Node(10);
         Node n7 = new Node(8);
-        Node n8 = new Node(4);
-        Node n9 = new Node(4);
-        Node n10 = new Node(2);
+        Node n8 = new Node(12);
+        Node n9 = new Node(10);
+        Node n10 = new Node(12);
+        Node n11 = new Node(6);
+        Node n12 = new Node(4);
+        Node n13 = new Node(2);
+        Node n14 = new Node(4);
 
         n0.setRight(n2);
         n0.setLeft(n1);
@@ -51,14 +55,20 @@ public class ExternalTreeTest {
         n2.setRight(n3);
         n2.setLeft(n4);
 
-        n4.setRight(n5);
-        n4.setLeft(n6);
+        n4.setRight(n6);
+        n4.setLeft(n5);
 
-        n6.setRight(n7);
-        n6.setLeft(n8);
+        n6.setRight(n8);
+        n6.setLeft(n7);
 
-        n8.setRight(n9);
-        n8.setLeft(n10);
+        n8.setRight(n10);
+        n8.setLeft(n9);
+
+        n5.setRight(n11);
+        n5.setLeft(n12);
+
+        n12.setRight(n14);
+        n12.setLeft(n13);
 
         return n0;
     }
@@ -85,38 +95,46 @@ public class ExternalTreeTest {
     public void mustRemoveElementsConcurrently() throws InterruptedException {
         Node node = getTreeForConcurrentExecution();
         ExternalTree tree = new ExternalTree(node);
-        tree.remove(12);
-        tree.remove(8);
-        tree.remove(4);
-        tree.remove(2);
-//        Thread t1 = new Thread(() -> {
-//            tree.remove(12);
-//        });
-//        t1.join();
-//
-//        Thread t2 = new Thread(() -> {
-//            tree.remove(8);
-//        });
-//        t2.join();
-//
-//        Thread t3 = new Thread(() -> {
-//            tree.remove(4);
-//        });
-//        t3.join();
-//
-//        Thread t4 = new Thread(() -> {
-//            tree.remove(2);
-//        });
-//        t4.join();
 
-//        try {
-//            t1.join();
-//            t2.join();
-//            t3.join();
-//            t4.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        Thread t1 = new Thread(() -> {
+            tree.remove(12);
+        });
+
+        Thread t2 = new Thread(() -> {
+            tree.remove(8);
+        });
+
+        Thread t3 = new Thread(() -> {
+            tree.remove(4);
+        });
+
+
+        Thread t4 = new Thread(() -> {
+            tree.remove(2);
+        });
+
+        Thread t5 = new Thread(() -> {
+            tree.remove(6);
+        });
+
+        Thread t6 = new Thread(() -> {
+            tree.remove(10);
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+        t6.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        t5.join();
+        t6.join();
+
 
         assertEquals(tree.getRoot().getKey(), 0);
         assertEquals(tree.getRoot().getRight().getKey(), 2147483647);

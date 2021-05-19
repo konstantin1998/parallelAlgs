@@ -30,7 +30,8 @@ public class ExternalTree {
         Node grandParent = null;
         Node parent = null;
         Node current = root;
-        while ( current != null && current.getKey() != key ) {
+
+        while (!((current == null) || (current.getKey() == key && current.isLeaf()))) {
             grandParent = parent;
             parent = current;
 
@@ -81,60 +82,66 @@ public class ExternalTree {
 
         Window w = search(key);
 
-        if (!removeWithLocks(w, key)) {
+        if (!removeWithLocks(w)) {
             remove(key);
         }
     }
 
 
-    private boolean removeWithLocks(Window w, int key) {
+    private boolean removeWithLocks(Window w) {
         Node grandParent = w.getGrandParent();
-        grandParent.getLock().lock();
-        try {
-            if (removeNodeFromLockedGrandparent(w, key)) return false;
-        } finally {
-            grandParent.getLock().unlock();
-
-        }
-        return true;
-    }
-
-    private boolean removeNodeFromLockedGrandparent(Window w, int key) {
-        Node grandParent = w.getGrandParent();
-        Node parent = w.getParent();
-        if(isStillSon(grandParent, parent)) {
-            parent.getLock().lock();
-            try {
-                if (removeNodeFromLockedParent(w, key)) return true;
-            } finally {
-                parent.getLock().unlock();
-            }
-        } else {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean removeNodeFromLockedParent(Window w, int key) {
         Node parent = w.getParent();
         Node current = w.getCurrent();
-        if(isStillSon(parent, current)) {
-            current.getLock().lock();
-            try {
-                if (current.isLeaf() && current.getKey() == key) {
+
+        boolean result = true;
+
+        grandParent.getLock().lock();
+        parent.getLock().lock();
+        current.getLock().lock();
+        try {
+            if(isStillSon(grandParent, parent)) {
+                if(isStillSon(parent, current)) {
                     doRemove(w);
                 } else {
-                    return true;
+                    result = false;
                 }
-            } finally {
-                current.getLock().unlock();
+            } else {
+                result = false;
             }
-
-        } else {
-            return true;
+        } finally {
+            current.getLock().unlock();
+            parent.getLock().unlock();
+            grandParent.getLock().unlock();
         }
-        return false;
+        return result;
     }
+
+//    private boolean removeNodeFromLockedGrandparent(Window w, int key) {
+//        Node grandParent = w.getGrandParent();
+//        Node parent = w.getParent();
+
+//    }
+//
+//    private boolean removeNodeFromLockedParent(Window w, int key) {
+//        Node parent = w.getParent();
+//        Node current = w.getCurrent();
+//        if(isStillSon(parent, current)) {
+//            current.getLock().lock();
+//            try {
+//                if (current.isLeaf() && current.getKey() == key) {
+//                    doRemove(w);
+//                } else {
+//                    return true;
+//                }
+//            } finally {
+//                current.getLock().unlock();
+//            }
+//
+//        } else {
+//            return true;
+//        }
+//        return false;
+//    }
 
 
     private void doRemove(Window w) {
