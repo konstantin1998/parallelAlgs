@@ -3,10 +3,10 @@ package ru.mipt;
 public class ExternalTree {
     private final Node root;
 
-    @Deprecated
-    public ExternalTree(Node root) {
-        this.root = root;
-    }
+//    @Deprecated
+//    public ExternalTree(Node root) {
+//        this.root = root;
+//    }
 
     public ExternalTree() {
         int fictitiousRootKey = 0;
@@ -28,7 +28,7 @@ public class ExternalTree {
         Node parent = null;
         Node current = root;
 
-        while (!((current == null) || current.getKey() == key || current.isLeaf())) {
+        while (!(current == null ||  current.isLeaf())) {
             grandParent = parent;
             parent = current;
 

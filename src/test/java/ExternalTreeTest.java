@@ -2,18 +2,31 @@ import org.junit.Test;
 import ru.mipt.ExternalTree;
 import ru.mipt.Node;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExternalTreeTest {
 
     @Test
     public void mustFindElementsWhenTheyArePresent() {
-        Node node = getTreeForSequentialExecution();
-        ExternalTree tree = new ExternalTree(node);
+
+        ExternalTree tree = new ExternalTree();
+        try {
+            setRoot(tree, getTreeForSequentialExecution());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         int[] keys = {4, 10, 14};
         for(int key: keys) {
             assertTrue(tree.contains(key));
         }
+    }
+
+    private void setRoot(ExternalTree tree, Node node) throws NoSuchFieldException, IllegalAccessException {
+        Field field = tree.getClass().getDeclaredField("root");
+        field.setAccessible(true);
+        field.set(tree, node);
     }
 
     private Node getTreeForSequentialExecution() {
@@ -76,26 +89,42 @@ public class ExternalTreeTest {
 
     @Test
     public void mustRemoveRightChildIfGrandparentIsPresent() {
-        Node root = getTreeForSequentialExecution();
-        ExternalTree tree = new ExternalTree(root);
+        ExternalTree tree = new ExternalTree();
+        try {
+            setRoot(tree, getTreeForSequentialExecution());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
         int key = 14;
         tree.remove(key);
+        Node root = tree.getRoot();
         assertEquals(root.getRight().getKey(), 10);
     }
 
     @Test
     public void mustRemoveLeftChildIfGrandparentIsPresent() {
-        Node root = getTreeForSequentialExecution();
-        ExternalTree tree = new ExternalTree(root);
+        ExternalTree tree = new ExternalTree();
+        try {
+            setRoot(tree, getTreeForSequentialExecution());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         int key = 10;
         tree.remove(key);
+        Node root = tree.getRoot();
         assertEquals(root.getRight().getKey(), 14);
     }
 
     @Test
     public void mustRemoveElementsConcurrently() throws InterruptedException {
-        Node node = getTreeForConcurrentExecution();
-        ExternalTree tree = new ExternalTree(node);
+        ExternalTree tree = new ExternalTree();
+        try {
+            setRoot(tree, getTreeForConcurrentExecution());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         Thread t1 = new Thread(() -> {
             tree.remove(12);
@@ -193,12 +222,12 @@ public class ExternalTreeTest {
     public void DoNotFallDownWhenWhenRemoversAndInsertersWorkTogether() throws InterruptedException {
         int[] arr1 = new int[100];
         for(int i = 0; i <= arr1.length - 1; i++) {
-            arr1[i] = i + 1;
+            arr1[i] = i;
         }
         int shift = 100;
         int[] arr2 = new int[100];
         for(int i = 0; i <= arr1.length - 1; i++) {
-            arr2[i] = i + shift + 1;
+            arr2[i] = i + shift;
         }
 
         ExternalTree tree = new ExternalTree();
@@ -217,6 +246,13 @@ public class ExternalTreeTest {
         inserter2.join();
         remover1.join();
         remover2.join();
+    }
+
+    @Test
+    public void problemWithZero() {
+        ExternalTree tree = new ExternalTree();
+        tree.insert(new Node(0));
+        tree.remove(0);
     }
 
 }
