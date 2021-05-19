@@ -1,6 +1,10 @@
 import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
 import ru.mipt.ExternalTree;
 import ru.mipt.Node;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExternalTreeTest {
@@ -146,4 +150,46 @@ public class ExternalTreeTest {
         assertNull(tree.getRoot().getRight().getLeft());
         assertNull(tree.getRoot().getRight().getRight());
     }
+
+
+    @Test
+    public void mustInsertElementSequentially() {
+        ExternalTree tree = new ExternalTree();
+
+        int[] keys = {1, 2, 3, 4, 5, 6, 7, 8};
+        for(int key: keys) {
+            tree.insert(new Node(key));
+        }
+
+        for(int key: keys) {
+            assertTrue(tree.contains(key));
+        }
+    }
+
+    @Test
+    public void mustInsertElementConcurrently() throws InterruptedException {
+        ExternalTree tree = new ExternalTree();
+
+        int[] keys = {1, 2, 3, 4, 5, 6, 7, 8};
+
+        Thread t1 = new Thread(new Task(tree, new int[]{keys[0], keys[1]}));
+        Thread t2 = new Thread(new Task(tree, new int[]{keys[2], keys[3]}));
+        Thread t3 = new Thread(new Task(tree, new int[]{keys[4], keys[5]}));
+        Thread t4 = new Thread(new Task(tree, new int[]{keys[6], keys[7]}));
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+
+        for(int key: keys) {
+            assertTrue(tree.contains(key));
+        }
+    }
+
 }
