@@ -1,9 +1,6 @@
 import org.junit.Test;
-import org.junit.jupiter.api.Disabled;
 import ru.mipt.ExternalTree;
 import ru.mipt.Node;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -172,10 +169,10 @@ public class ExternalTreeTest {
 
         int[] keys = {1, 2, 3, 4, 5, 6, 7, 8};
 
-        Thread t1 = new Thread(new Task(tree, new int[]{keys[0], keys[1]}));
-        Thread t2 = new Thread(new Task(tree, new int[]{keys[2], keys[3]}));
-        Thread t3 = new Thread(new Task(tree, new int[]{keys[4], keys[5]}));
-        Thread t4 = new Thread(new Task(tree, new int[]{keys[6], keys[7]}));
+        Thread t1 = new Thread(new Inserting(tree, new int[]{keys[0], keys[1]}));
+        Thread t2 = new Thread(new Inserting(tree, new int[]{keys[2], keys[3]}));
+        Thread t3 = new Thread(new Inserting(tree, new int[]{keys[4], keys[5]}));
+        Thread t4 = new Thread(new Inserting(tree, new int[]{keys[6], keys[7]}));
 
         t1.start();
         t2.start();
@@ -190,6 +187,36 @@ public class ExternalTreeTest {
         for(int key: keys) {
             assertTrue(tree.contains(key));
         }
+    }
+
+    @Test
+    public void DoNotFallDownWhenWhenRemoversAndInsertersWorkTogether() throws InterruptedException {
+        int[] arr1 = new int[100];
+        for(int i = 0; i <= arr1.length - 1; i++) {
+            arr1[i] = i + 1;
+        }
+        int shift = 100;
+        int[] arr2 = new int[100];
+        for(int i = 0; i <= arr1.length - 1; i++) {
+            arr2[i] = i + shift + 1;
+        }
+
+        ExternalTree tree = new ExternalTree();
+        Thread inserter1 = new Thread(new Inserting(tree, arr1));
+        Thread inserter2 = new Thread(new Inserting(tree, arr2));
+
+        Thread remover1 = new Thread(new Removing(tree, arr1));
+        Thread remover2 = new Thread(new Removing(tree, arr2));
+
+        inserter1.start();
+        inserter2.start();
+        remover1.start();
+        remover2.start();
+
+        inserter1.join();
+        inserter2.join();
+        remover1.join();
+        remover2.join();
     }
 
 }

@@ -1,8 +1,5 @@
 package ru.mipt;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 public class ExternalTree {
     private final Node root;
 
@@ -49,7 +46,7 @@ public class ExternalTree {
     public void remove(int key) {
         Window w = search(key);
 
-        if (w.getCurrent().getKey() != key) {
+        if (!contains(key)) {
             return;
         }
 

@@ -1,11 +1,11 @@
 import ru.mipt.ExternalTree;
 import ru.mipt.Node;
 
-public class Task implements Runnable{
+public class Inserting implements Runnable{
     private final ExternalTree tree;
     private final int[] keys;
 
-    public Task(ExternalTree tree, int[] keys) {
+    public Inserting(ExternalTree tree, int[] keys) {
         this.tree = tree;
         this.keys = keys;
     }
