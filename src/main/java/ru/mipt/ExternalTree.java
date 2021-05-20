@@ -3,11 +3,6 @@ package ru.mipt;
 public class ExternalTree {
     private final Node root;
 
-//    @Deprecated
-//    public ExternalTree(Node root) {
-//        this.root = root;
-//    }
-
     public ExternalTree() {
         int fictitiousRootKey = 0;
         Node fictitiousRoot = new Node(fictitiousRootKey);

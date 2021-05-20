@@ -248,11 +248,4 @@ public class ExternalTreeTest {
         remover2.join();
     }
 
-    @Test
-    public void problemWithZero() {
-        ExternalTree tree = new ExternalTree();
-        tree.insert(new Node(0));
-        tree.remove(0);
-    }
-
 }
