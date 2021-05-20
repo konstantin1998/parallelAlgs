@@ -38,9 +38,10 @@ public class ExternalTree {
     }
 
     public void remove(int key) {
+
         Window w = search(key);
 
-        if (!contains(key)) {
+        if(!(w.getCurrent() != null && w.getCurrent().getKey() == key))  {
             return;
         }
 
@@ -162,12 +163,11 @@ public class ExternalTree {
 
     public void insert(Node node) {
         int key = node.getKey();
-        System.out.println(key);
-        if (contains(key)) {
-            return;
-        }
 
         Window w = search(key);
+        if (w.getCurrent() != null && w.getCurrent().getKey() == key) {
+            return;
+        }
 
         if (!insertWithLocks(w, node)) {
             insert(node);

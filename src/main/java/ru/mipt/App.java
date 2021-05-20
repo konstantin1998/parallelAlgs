@@ -3,7 +3,7 @@ package ru.mipt;
 import java.util.Random;
 
 public class App {
-    private static int keyLimit = 100;
+    private static int keyLimit = 100_000;
 
     public static void main(String[] args) throws InterruptedException {
         ExternalTree tree = new ExternalTree();
@@ -11,6 +11,7 @@ public class App {
 
         Thread t1 = new Thread(new Executor(tree));
         Thread t2 = new Thread(new Executor(tree));
+        
 
         t1.start();
         t2.start();
