@@ -37,7 +37,6 @@ public class ExternalTree {
         return new Window(grandParent, parent, current);
     }
 
-
     public void remove(int key) {
         Window w = search(key);
 
@@ -48,34 +47,39 @@ public class ExternalTree {
         if (!removeWithLocks(w)) {
             remove(key);
         }
-    }
 
+    }
 
     private boolean removeWithLocks(Window w) {
         Node grandParent = w.getGrandParent();
         Node parent = w.getParent();
         Node current = w.getCurrent();
 
-        boolean result = true;
-
+        boolean result = false;
         grandParent.getLock().lock();
-        parent.getLock().lock();
-        current.getLock().lock();
         try {
             if(isStillSon(grandParent, parent)) {
-                if(isStillSon(parent, current)) {
-                    doRemove(w);
-                } else {
-                    result = false;
+                parent.getLock().lock();
+                try {
+                    if (isStillSon(parent, current)) {
+                        current.getLock().lock();
+                        try {
+                            if(current.isLeaf()) {
+                                doRemove(w);
+                                result = true;
+                            }
+                        } finally {
+                            current.getLock().unlock();
+                        }
+                    }
+                } finally {
+                    parent.getLock().unlock();
                 }
-            } else {
-                result = false;
             }
         } finally {
-            current.getLock().unlock();
-            parent.getLock().unlock();
             grandParent.getLock().unlock();
         }
+
         return result;
     }
 
@@ -158,7 +162,7 @@ public class ExternalTree {
 
     public void insert(Node node) {
         int key = node.getKey();
-
+        System.out.println(key);
         if (contains(key)) {
             return;
         }
@@ -174,20 +178,25 @@ public class ExternalTree {
         Node parent = w.getParent();
         Node current = w.getCurrent();
 
-        boolean result = true;
+        boolean result = false;
 
         parent.getLock().lock();
-        current.getLock().lock();
         try {
-            if(isStillSon(parent, current) && current.isLeaf()) {
-                doInsert(w, node);
-            } else {
-                result = false;
+            if(isStillSon(parent, current)) {
+                current.getLock().lock();
+                try {
+                    if(current.isLeaf()) {
+                        doInsert(w, node);
+                        result = true;
+                    }
+                } finally {
+                    current.getLock().unlock();
+                }
             }
         } finally {
-            current.getLock().unlock();
             parent.getLock().unlock();
         }
+
         return result;
     }
 }
