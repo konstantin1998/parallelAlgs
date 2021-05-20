@@ -1,6 +1,6 @@
 import org.junit.Test;
 import ru.mipt.ExternalTree;
-import ru.mipt.Node;
+import ru.mipt.entities.Node;
 
 import java.lang.reflect.Field;
 

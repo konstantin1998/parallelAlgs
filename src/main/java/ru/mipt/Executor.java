@@ -1,10 +1,12 @@
 package ru.mipt;
 
+import ru.mipt.entities.Node;
+
 import java.util.Random;
 
 public class Executor implements Runnable{
     private final ExternalTree tree;
-    private final double x = 0.25;
+    private final double x = 0.5;
     private int counter;
     private final long seed = 0;
     private int keyLimit = 100_000;
@@ -42,9 +44,5 @@ public class Executor implements Runnable{
 
     public int getCounter() {
         return counter;
-    }
-
-    public void setKeyLimit(int keyLimit) {
-        this.keyLimit = keyLimit;
     }
 }

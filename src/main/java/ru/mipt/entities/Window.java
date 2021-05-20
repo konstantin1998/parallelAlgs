@@ -1,6 +1,7 @@
-package ru.mipt;
+package ru.mipt.entities;
 
 import lombok.Data;
+import ru.mipt.entities.Node;
 
 @Data
 public class Window {

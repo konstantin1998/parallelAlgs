@@ -1,5 +1,8 @@
 package ru.mipt;
 
+import ru.mipt.entities.Node;
+import ru.mipt.entities.Window;
+
 public class ExternalTree {
     private final Node root;
 
@@ -38,7 +41,6 @@ public class ExternalTree {
     }
 
     public void remove(int key) {
-
         Window w = search(key);
 
         if(!(w.getCurrent() != null && w.getCurrent().getKey() == key))  {
@@ -48,7 +50,6 @@ public class ExternalTree {
         if (!removeWithLocks(w)) {
             remove(key);
         }
-
     }
 
     private boolean removeWithLocks(Window w) {

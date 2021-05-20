@@ -1,5 +1,5 @@
 import ru.mipt.ExternalTree;
-import ru.mipt.Node;
+import ru.mipt.entities.Node;
 
 public class Inserting implements Runnable{
     private final ExternalTree tree;
